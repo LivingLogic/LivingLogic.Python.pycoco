@@ -58,6 +58,7 @@ args = dict(
 	keywords=", ".join(k for k in KEYWORDS.strip().splitlines() if k.strip() and not k.strip().startswith("#")),
 	package_dir={"": "src"},
 	py_modules=["pycoco"],
+	include_package_data=True, # includes the CSS file
 )
 
 
