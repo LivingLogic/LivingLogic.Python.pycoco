@@ -2,6 +2,13 @@
 
 import os, datetime, urllib
 
+try:
+	import pkg_resources
+except ImportError:
+	css = open(os.path.join(__file__, "coverage.css"), "rb").read()
+else:
+	css = pgk_resource.resource_string(__name__, "coverage.css")
+
 from ll import sisyphus, url
 from ll.xist import xsc
 from ll.xist.ns import xml, html, meta, htmlspecials
@@ -411,9 +418,8 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		e.write(u.openwrite(), base="root:index.html", encoding="utf-8")
 
 		# Copy CSS file
-		self.logProgress("### copying CSS file")
-		data = url.File("coverage.css").openread().read()
-		(self.outputdir/"coverage.css").openwrite().write(data)
+		self.logProgress("### saving CSS file")
+		(self.outputdir/"coverage.css").openwrite().write(css)
 
 	def execute(self):
 		self.cleanup()
