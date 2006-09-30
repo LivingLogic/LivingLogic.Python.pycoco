@@ -7,7 +7,7 @@ try:
 except ImportError:
 	css = open(os.path.join(__file__, "coverage.css"), "rb").read()
 else:
-	css = pkg_resource.resource_string(__name__, "coverage.css")
+	css = pkg_resources.resource_string(__name__, "coverage.css")
 
 from ll import sisyphus, url
 from ll.xist import xsc
