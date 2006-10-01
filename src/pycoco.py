@@ -5,7 +5,7 @@ import sys, os, datetime, urllib, optparse
 try:
 	import pkg_resources
 except ImportError:
-	css = open(os.path.join(__file__, "coverage.css"), "rb").read()
+	css = open(os.path.join(os.path.dirname(__file__), "EGG-INFO", "coverage.css"), "rb").read()
 else:
 	css = pkg_resources.get_distribution("pycoco").get_metadata("coverage.css")
 
