@@ -3,11 +3,15 @@
 import os, datetime, urllib
 
 try:
-	import pkg_resources
-except ImportError:
-	css = open(os.path.join(__file__, "coverage.css"), "rb").read()
-else:
-	css = pkg_resources.resource_string(__name__, "coverage.css")
+	try:
+		import pkg_resources
+	except ImportError:
+		css = open(os.path.join(__file__, "coverage.css"), "rb").read()
+	else:
+		css = pkg_resources.resource_string(__name__, "coverage.css")
+except IOError:
+	css = open("coverage.css", "rb").read()
+
 
 from ll import sisyphus, url
 from ll.xist import xsc
