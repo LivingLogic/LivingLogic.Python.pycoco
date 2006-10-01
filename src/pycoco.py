@@ -7,7 +7,7 @@ try:
 except ImportError:
 	css = open(os.path.join(__file__, "coverage.css"), "rb").read()
 else:
-	css = pkg_resources.resource_string(__name__, "coverage.css")
+	css = pkg_resources.get_distribution("pycoco").get_metadata("coverage.css")
 
 
 from ll import sisyphus, url
@@ -443,7 +443,7 @@ def main():
 	p = optparse.OptionParser(usage="usage: %prog [options]")
 	p.add_option("-o", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default="~/pycoco")
 	(options, args) = p.parse_args(args)
-	if len(args) != =:
+	if len(args) != 0:
 		p.error("incorrect number of arguments")
 		return 1
 	sisyphus.execute(Python_GenerateCodeCoverage(options.outputdir))

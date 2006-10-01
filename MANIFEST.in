@@ -1,1 +1,1 @@
-include src/coverage.css
+include src/pycoco.egg-info/coverage.css
