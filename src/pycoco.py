@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 
-import os, datetime, urllib
+import sys, os, datetime, urllib, optparse
 
 try:
 	import pkg_resources
@@ -238,11 +238,11 @@ class File(object):
 
 
 class Python_GenerateCodeCoverage(sisyphus.Job):
-	def __init__(self):
+	def __init__(self, outputdir):
 		sisyphus.Job.__init__(self, 60*60, name="Python_GenerateCodeCoverage", raiseerrors=1)
 		self.url = "http://svn.python.org/snapshots/python.tar.bz2"
 		self.tarfile = "python.tar.bz2"
-		self.outputdir = url.Dir("~/documentroot/coverage.livinglogic.de/")
+		self.outputdir = url.Dir(outputdir)
 
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
 		self.compileopts = "-fprofile-arcs -ftest-coverage"
@@ -438,5 +438,17 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		self.makehtml(files)
 		self.logLoop("done with project Python (%s; %d files)" % (self.timestamp.strftime("%Y-%m-%d %H:%M:%S"), len(files)))
 
+
+def main():
+	p = optparse.OptionParser(usage="usage: %prog [options]")
+	p.add_option("-o", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default="~/pycoco")
+	(options, args) = p.parse_args(args)
+	if len(args) != =:
+		p.error("incorrect number of arguments")
+		return 1
+	sisyphus.execute(Python_GenerateCodeCoverage(options.outputdir))
+	return 0
+
+
 if __name__=="__main__":
-	sisyphus.execute(Python_GenerateCodeCoverage())
+	sys.exit(main())
