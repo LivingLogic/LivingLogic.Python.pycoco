@@ -1,1 +1,6 @@
 include src/pycoco.egg-info/coverage.css
+include NEWS
+include NEWS.xml
+include INSTALL
+include INSTALL.xml
+

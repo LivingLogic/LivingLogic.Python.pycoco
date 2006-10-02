@@ -247,7 +247,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
 		self.compileopts = "-fprofile-arcs -ftest-coverage"
 		self.linkopts = "-lgcov"
-		self.gcovcmd = "gcov-3.4"
+		self.gcovcmd = os.environ.get("COV", "gcov")
 		self.makefile = "python/Makefile"
 
 		self.buildlog = [] # the output of configuring and building Python
