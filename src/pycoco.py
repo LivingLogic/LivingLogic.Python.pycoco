@@ -439,7 +439,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		self.logLoop("done with project Python (%s; %d files)" % (self.timestamp.strftime("%Y-%m-%d %H:%M:%S"), len(files)))
 
 
-def main():
+def main(args=None):
 	p = optparse.OptionParser(usage="usage: %prog [options]")
 	p.add_option("-o", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default="~/pycoco")
 	(options, args) = p.parse_args(args)
