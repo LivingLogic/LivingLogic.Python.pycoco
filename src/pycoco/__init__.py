@@ -157,7 +157,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 						lineno=i+1,
 						count=count,
 					)
-					for (i, (count, content)) in enumerate(file.lines),
+					for (i, (count, content)) in enumerate(file.lines)
 				),
 				title=("Python code coverage: ", filename),
 				crumbs=(
