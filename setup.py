@@ -58,6 +58,14 @@ args = dict(
 	keywords=", ".join(k for k in KEYWORDS.strip().splitlines() if k.strip() and not k.strip().startswith("#")),
 	package_dir={"": "src"},
 	py_modules=["pycoco"],
+	package_data={
+		"": ["*.css"],
+	},
+	install_requires=[
+		"ll-core >= 1.5",
+		"ll-xist >= 2.15.1",
+	],
+	zip_safe=False,
 )
 
 
