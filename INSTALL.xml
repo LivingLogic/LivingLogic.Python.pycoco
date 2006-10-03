@@ -35,6 +35,6 @@ can set the environment variable <lit>COV</lit> to point to the coverage
 program (the default is <lit>gcov</lit>).</par>
 
 <par>You must create a directory <dirname>run</dirname> in your home directory,
-where <package>pycoco</package> will put its pid file (log files will be put into
+where <module>pycoco</module> will put its pid file (log files will be put into
 <dirname>~/log</dirname>, but this directory will be created automatically).</par>
 </section>
