@@ -33,4 +33,8 @@ to Walter Dörwald (<email>walter@livinglogic.de</email>).</par>
 (which are used by Python's Makefile itself for the C and C++ compiler), you
 can set the environment variable <lit>COV</lit> to point to the coverage
 program (the default is <lit>gcov</lit>).</par>
+
+<par>You must create a directory <dirname>run</dirname> in your home directory,
+where <package>pycoco</package> will put its pid file (log files will be put into
+<dirname>~/log</dirname>, but this directory will be created automatically).</par>
 </section>
