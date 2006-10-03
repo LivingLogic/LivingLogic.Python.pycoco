@@ -28,20 +28,9 @@ to Walter Dörwald (<email>walter@livinglogic.de</email>).</par>
 </section>
 
 
-<section><title>Installation</title>
-<par><app>distutils</app> is used for installation, so it's rather simple.
-Execute the following command:</par>
-<prog>
-python setup.py install
-</prog>
-
-<par>For Windows a binary distribution is provided. To install it,
-double click it and follow the instructions.</par>
-
-<par><app>setuptools</app> is supported for installation, so if you have
-<app>setuptools</app> installed the package will be installed as an egg
-(and you can use <filename>easy_install</filename> for installation).</par>
-
-<par>If you have difficulties installing this software, send a problem report
-to Walter Dörwald (<email>walter@livinglogic.de</email>).</par>
+<section><title>Configuration</title>
+<par>In addition to the environment variables <lit>CC</lit> and <lit>CXX</lit>
+(which are used by Python's Makefile itself for the C and C++ compiler), you
+can set the environment variable <lit>COV</lit> to point to the coverage
+program (the default is <lit>gcov</lit>).</par>
 </section>
