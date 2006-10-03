@@ -6,13 +6,6 @@ from ll import sisyphus, url
 
 import xmlns
 
-try:
-	import pkg_resources
-except ImportError:
-	css = open(os.path.join(os.path.dirname(__file__), "coverage.css"), "rb").read()
-else:
-	css = pkg_resources.resource_string(__name__, "coverage.css")
-
 
 class File(object):
 	def __init__(self, name):
@@ -204,7 +197,13 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		e.write(u.openwrite(), base="root:index.html", encoding="utf-8")
 
 		# Copy CSS file
-		self.logProgress("### saving CSS file")
+		self.logProgress("### copying CSS file")
+		try:
+			import pkg_resources
+		except ImportError:
+			css = open(os.path.join(os.path.dirname(__file__), "coverage.css"), "rb").read()
+		else:
+			css = pkg_resources.resource_string(__name__, "coverage.css")
 		(self.outputdir/"coverage.css").openwrite().write(css)
 
 	def execute(self):
