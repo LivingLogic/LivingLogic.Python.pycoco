@@ -4,7 +4,7 @@ import sys, os, datetime, urllib, optparse
 
 from ll import sisyphus, url
 
-import xmlns
+from pycoco import xmlns
 
 
 class File(object):
