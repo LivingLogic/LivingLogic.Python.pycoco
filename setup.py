@@ -61,6 +61,14 @@ args = dict(
 	package_data={
 		"": ["*.css"],
 	},
+	entry_points=dict(
+		console_scripts=[
+			"pycoco = pycoco:main",
+		]
+	),
+	scripts=[
+		"scripts/pycoco",
+	],
 	install_requires=[
 		"ll-core >= 1.5",
 		"ll-xist >= 2.15.1",
