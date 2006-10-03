@@ -57,7 +57,7 @@ args = dict(
 	classifiers=[c for c in CLASSIFIERS.strip().splitlines() if c.strip() and not c.strip().startswith("#")],
 	keywords=", ".join(k for k in KEYWORDS.strip().splitlines() if k.strip() and not k.strip().startswith("#")),
 	package_dir={"": "src"},
-	py_modules=["pycoco"],
+	packages=["pycoco"],
 	package_data={
 		"": ["*.css"],
 	},
