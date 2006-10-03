@@ -5,6 +5,8 @@ This module is an &xist; namespace used for formatting the &html; coverage
 report.
 """
 
+import datetime
+
 from ll.xist import xsc
 from ll.xist.ns import xml, html, meta, htmlspecials
 
