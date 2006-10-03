@@ -1,4 +1,4 @@
-include pycoco/coverage.css
+include src/pycoco/coverage.css
 include NEWS
 include NEWS.xml
 include INSTALL
