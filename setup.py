@@ -46,7 +46,7 @@ coverage
 
 args = dict(
 	name="pycoco",
-	version="0.1.1",
+	version="0.2",
 	description="Python code coverage",
 	long_description=DESCRIPTION,
 	author=u"Walter Doerwald",
@@ -59,7 +59,7 @@ args = dict(
 	package_dir={"": "src"},
 	packages=["pycoco"],
 	package_data={
-		"": ["*.css"],
+		"": ["*.css", "*.js"],
 	},
 	entry_points=dict(
 		console_scripts=[

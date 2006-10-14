@@ -146,6 +146,33 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			f.close()
 
 	def makehtml(self, files):
+		# Generate main page
+		self.logProgress("### generating index page")
+		e = xmlns.page(
+			xmlns.filelist(
+				(
+					xmlns.fileitem(
+						name=file.name.split("/", 1)[-1],
+						lines=len(file.lines),
+						coverablelines=sum(line[0]>=0 for line in file.lines),
+						coveredlines=sum(line[0]>0 for line in file.lines),
+					)
+					for file in files
+				),
+				timestamp=("Repository timestamp ", self.timestamp.strftime("%Y-%m-%d %H:%M:%S")),
+				revision=self.revision,
+			),
+			title=("Python code coverage (", self.timestamp.strftime("%Y-%m-%d"), ")"),
+			crumbs=(
+				xmlns.crumb("Core Development", href="http://www.python.org/dev/", first=True),
+				xmlns.crumb("Code coverage"),
+			),
+			onload="files_prepare()",
+		)
+		e = e.conv()
+		u = self.outputdir/"index.html"
+		e.write(u.openwrite(), base="root:index.html", encoding="utf-8")
+
 		# Generate page for each source file
 		for (i, file) in enumerate(files):
 			filename = file.name.split("/", 1)[-1]
@@ -170,41 +197,16 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			u = self.outputdir/(filename + ".html")
 			e.write(u.openwrite(), base="root:%s.html" % filename, encoding="utf-8")
 
-		# Generate main page
-		self.logProgress("### generating index page")
-		e = xmlns.page(
-			xmlns.filelist(
-				(
-					xmlns.fileitem(
-						name=file.name.split("/", 1)[-1],
-						lines=len(file.lines),
-						coverablelines=sum(line[0]>=0 for line in file.lines),
-						coveredlines=sum(line[0]>0 for line in file.lines),
-					)
-					for file in files
-				),
-				timestamp=("Repository timestamp ", self.timestamp.strftime("%Y-%m-%d %H:%M:%S")),
-				revision=self.revision,
-			),
-			title=("Python code coverage (", self.timestamp.strftime("%Y-%m-%d"), ")"),
-			crumbs=(
-				xmlns.crumb("Core Development", href="http://www.python.org/dev/", first=True),
-				xmlns.crumb("Code coverage"),
-			),
-		)
-		e = e.conv()
-		u = self.outputdir/"index.html"
-		e.write(u.openwrite(), base="root:index.html", encoding="utf-8")
-
-		# Copy CSS file
-		self.logProgress("### copying CSS file")
-		try:
-			import pkg_resources
-		except ImportError:
-			css = open(os.path.join(os.path.dirname(__file__), "coverage.css"), "rb").read()
-		else:
-			css = pkg_resources.resource_string(__name__, "coverage.css")
-		(self.outputdir/"coverage.css").openwrite().write(css)
+		# Copy CSS/JS file
+		for filename in ("coverage.css", "coverage.js"):
+			self.logProgress("### copying %s" % filename)
+			try:
+				import pkg_resources
+			except ImportError:
+				css = open(os.path.join(os.path.dirname(__file__), filename), "rb").read()
+			else:
+				css = pkg_resources.resource_string(__name__, filename)
+			(self.outputdir/filename).openwrite().write(css)
 
 	def execute(self):
 		self.cleanup()

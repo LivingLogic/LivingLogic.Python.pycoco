@@ -15,6 +15,7 @@ class page(xsc.Element):
 	class Attrs(xsc.Element.Attrs):
 		class title(xsc.TextAttr): required = True
 		class crumbs(xsc.TextAttr): required = True
+		class onload(xsc.TextAttr): pass
 
 	def convert(self, converter):
 		e = xsc.Frag(
@@ -24,7 +25,8 @@ class page(xsc.Element):
 				html.head(
 					meta.contenttype(),
 					html.title(self.attrs.title),
-					html.link(type="text/css", rel="stylesheet", href="root:coverage.css"),
+					meta.stylesheet(href="root:coverage.css"),
+					htmlspecials.javascript(src="root:coverage.js"),
 				),
 				html.body(
 					html.div(
@@ -45,6 +47,7 @@ class page(xsc.Element):
 						self.content,
 						class_="content",
 					),
+					onload=self.attrs.onload,
 				),
 			),
 		)
@@ -84,16 +87,17 @@ class filelist(xsc.Element):
 			htmlspecials.plaintable(
 				html.thead(
 					html.tr(
-						html.th("Filename"),
-						html.th("# lines"),
-						html.th("# coverable lines"),
-						html.th("# covered lines"),
-						html.th("coverage"),
-						html.th("distribution"),
+						html.th("Filename", id="filename"),
+						html.th("# lines", id="nroflines"),
+						html.th("# coverable lines", id="coverablelines"),
+						html.th("# covered lines", id="coveredlines"),
+						html.th("coverage", id="coverage"),
+						html.th("distribution", id="distibution"),
 					),
 				),
 				html.tbody(
 					self.content,
+					id="files",
 				),
 				class_="files",
 			)
