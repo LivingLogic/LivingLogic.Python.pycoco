@@ -120,7 +120,7 @@ class fileitem(xsc.Element):
 		distsize = (100, 8)
 		if coverablelines:
 			coverage = "%.02f%%" % (100.*coveredlines/coverablelines)
-			coverageclass = "int"
+			coverageclass = "coverage"
 			distribution = xsc.Frag()
 			totalwidth = 0
 			if coverablelines < lines:
@@ -137,7 +137,7 @@ class fileitem(xsc.Element):
 				totalwidth += width
 		else:
 			coverage = "n/a"
-			coverageclass = "int disable"
+			coverageclass = "coverage disable"
 			distribution = htmlspecials.pixel(width=distsize[0], height=distsize[1], style="background-color: #000;")
 
 		e = html.tr(
@@ -150,15 +150,15 @@ class fileitem(xsc.Element):
 			),
 			html.td(
 				lines,
-				class_="int",
+				class_="noroflines",
 			),
 			html.td(
 				coverablelines,
-				class_="int",
+				class_="coverablelines",
 			),
 			html.td(
 				coveredlines,
-				class_="int",
+				class_="coveredlines",
 			),
 			html.td(
 				coverage,

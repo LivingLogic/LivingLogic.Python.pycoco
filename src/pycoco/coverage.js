@@ -12,7 +12,7 @@ function get_children(node, type)
 	return result;
 }
 
-function get_nth_child(node, count, type)
+function get_nth_child(node, type, count)
 {
 	if (!count)
 		count = 0;
@@ -24,6 +24,22 @@ function get_nth_child(node, count, type)
 		if (child.nodeType == 1 && (!type || (child.nodeName.toLowerCase() == type)))
 			if (!count--)
 				return child;
+	}
+	return null;
+}
+
+function get_class_child(node, type, class_)
+{
+	if (type)
+		type = type.toLowerCase();
+	for (var i = 0; i < node.childNodes.length; ++i)
+	{
+		var child = node.childNodes[i];
+		if (child.nodeType == 1 &&
+		    (!type || (child.nodeName.toLowerCase() == type)) &&
+		    (!class_ || (child.getAttribute("class") == class_))
+		)
+			return child;
 	}
 	return null;
 }
@@ -41,27 +57,27 @@ function get_first_text(node)
 
 function get_filename(tr)
 {
-	return get_first_text(get_nth_child(tr, 0, "th"));
+	return get_first_text(get_nth_child(tr, "th", 0));
 }
 
 function get_nroflines(tr)
 {
-	return parseInt(get_first_text(get_nth_child(tr, 0, "td")), 10);
+	return parseInt(get_first_text(get_nth_child(tr, "td", 0)), 10);
 }
 
 function get_coverablelines(tr)
 {
-	return parseInt(get_first_text(get_nth_child(tr, 1, "td")), 10);
+	return parseInt(get_first_text(get_nth_child(tr, "td", 1)), 10);
 }
 
 function get_coveredlines(tr)
 {
-	return parseInt(get_first_text(get_nth_child(tr, 2, "td")), 10);
+	return parseInt(get_first_text(get_nth_child(tr, "td", 2)), 10);
 }
 
 function get_coverage(tr)
 {
-	var content = get_first_text(get_nth_child(tr, 3, "td"));
+	var content = get_first_text(get_nth_child(tr, "td", 3));
 	if (content == "n/a")
 		return -1.0;
 	return parseFloat(content);
@@ -102,73 +118,73 @@ function files_prepare()
 	document.getElementById("filename").appendChild(button);
 	
 	button = document.createElement("span");
-	button.innerHTML = "1-9";
+	button.innerHTML = "123";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbynroflines_asc);}
+		button.onclick = function(){return files_sort(files_cmpbynroflines_asc, "nroflines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbynroflines_asc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbynroflines_asc, 'nroflines');");
 	document.getElementById("nroflines").appendChild(button);
 
 	button = document.createElement("span");
-	button.innerHTML = "9-1";
+	button.innerHTML = "321";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbynroflines_desc);}
+		button.onclick = function(){return files_sort(files_cmpbynroflines_desc, "nroflines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbynroflines_desc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbynroflines_desc, 'nroflines');");
 	document.getElementById("nroflines").appendChild(button);
 	
 	button = document.createElement("span");
-	button.innerHTML = "1-9";
+	button.innerHTML = "123";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoverablelines_asc);}
+		button.onclick = function(){return files_sort(files_cmpbycoverablelines_asc, "coverablelines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoverablelines_asc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoverablelines_asc, 'coverablelines');");
 	document.getElementById("coverablelines").appendChild(button);
 
 	button = document.createElement("span");
-	button.innerHTML = "9-1";
+	button.innerHTML = "321";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoverablelines_desc);}
+		button.onclick = function(){return files_sort(files_cmpbycoverablelines_desc, "coverablelines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoverablelines_desc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoverablelines_desc, 'coverablelines');");
 	document.getElementById("coverablelines").appendChild(button);
 	
 	button = document.createElement("span");
-	button.innerHTML = "1-9";
+	button.innerHTML = "123";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoveredlines_asc);}
+		button.onclick = function(){return files_sort(files_cmpbycoveredlines_asc, "coveredlines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoveredlines_asc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoveredlines_asc, 'coveredlines');");
 	document.getElementById("coveredlines").appendChild(button);
 
 	button = document.createElement("span");
-	button.innerHTML = "9-1";
+	button.innerHTML = "321";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoveredlines_desc);}
+		button.onclick = function(){return files_sort(files_cmpbycoveredlines_desc, "coveredlines");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoveredlines_desc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoveredlines_desc, 'coveredlines');");
 	document.getElementById("coveredlines").appendChild(button);
 
 	button = document.createElement("span");
-	button.innerHTML = "1-9";
+	button.innerHTML = "123";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoverage_asc);}
+		button.onclick = function(){return files_sort(files_cmpbycoverage_asc, "coverage");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoverage_asc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoverage_asc, 'coverage');");
 	document.getElementById("coverage").appendChild(button);
 
 	button = document.createElement("span");
-	button.innerHTML = "9-1";
+	button.innerHTML = "321";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbycoverage_desc);}
+		button.onclick = function(){return files_sort(files_cmpbycoverage_desc, "coverage");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbycoverage_desc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbycoverage_desc, 'coverage');");
 	document.getElementById("coverage").appendChild(button);
 }
 
-function files_sort(sorter)
+function files_sort(sorter, id)
 {
-	document.body.setAttribute("class", "wait");
+	document.body.className = "wait";
 
 	function dosort()
 	{
@@ -178,7 +194,7 @@ function files_sort(sorter)
 		for (var i = 0; i < rows.length; ++i)
 			tbody.appendChild(rows[i]);
 	
-		document.body.setAttribute("class", "nowait");
+		document.body.className = "nowait";
 	}
 	window.setTimeout(dosort, 0.01);
 	return false;

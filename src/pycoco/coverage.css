@@ -123,13 +123,21 @@ table.files tbody th
 {
 	text-align: left;
 }
-table.files tbody td.int
+table.files tbody td.nroflines,
+table.files tbody td.coverablelines,
+table.files tbody td.coveredlines,
+table.files tbody td.coverage
 {
 	text-align: right;
 }
 table.files tbody td.disable
 {
 	color: #999;
+}
+
+table.files tbody td.sorted
+{
+	background-color: #eee;
 }
 
 table.file
