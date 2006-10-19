@@ -21,7 +21,7 @@ dist: text
 	rm -rf dist/*
 	python$(PYVERSION) setup.py sdist --formats=bztar,gztar
 	python$(PYVERSION) setup.py sdist --formats=zip
-	cd dist && scp.py -v -uftp -gftp *.tar.gz *.tar.bz2 *.zip root@isar.livinglogic.de:~ftp/pub/livinglogic/core/
+	cd dist && scp.py -v -uftp -gftp *.tar.gz *.tar.bz2 *.zip root@isar.livinglogic.de:~ftp/pub/livinglogic/pycoco/
 
 
 register:
@@ -47,7 +47,7 @@ wintext:
 windist: wintext
 	python$(PYVERSION) setup.py bdist --formats=wininst
 	python$(PYVERSION) setup.py bdist --formats=egg
-	cd dist && python -mscp -v -uftp -gftp *.exe *.egg root@isar.livinglogic.de:~ftp/pub/livinglogic/core/
+	cd dist && python -mscp -v -uftp -gftp *.exe *.egg root@isar.livinglogic.de:~ftp/pub/livinglogic/pycoco/
 
 
 winupload: wintext
