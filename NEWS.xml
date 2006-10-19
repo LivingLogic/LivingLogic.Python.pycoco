@@ -1,3 +1,11 @@
+<section><title>Changes in 0.2 (released 10/19/2006)</title>
+
+<par>The list of files can now be sorted by clicking on the appropriate buttons
+in the table headers.</par>
+
+</section>
+
+
 <section><title>Changes in 0.1.1 (released 10/02/2006)</title>
 
 <par>Added a missing import to the XIST namespace.</par>

@@ -21,6 +21,12 @@ The script downloads the Python source code, builds the interpreter
 with code coverage options, runs the test suite and generates an HTML
 report how often each source code line in each C or Python file has been
 executed by the test suite.
+
+New in version 0.2
+------------------
+
+The list of files can now be sorted by clicking on the sort buttons
+in the table headers.
 """
 
 
