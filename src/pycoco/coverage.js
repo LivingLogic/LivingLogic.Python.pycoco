@@ -104,17 +104,17 @@ function files_prepare()
 	button = document.createElement("span");
 	button.innerHTML = "A-Z";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbyfilename_asc);}
+		button.onclick = function(){return files_sort(files_cmpbyfilename_asc, "filename");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbyfilename_asc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbyfilename_asc, 'filename');");
 	document.getElementById("filename").appendChild(button);
 
 	button = document.createElement("span");
 	button.innerHTML = "Z-A";
 	if (document.all)
-		button.onclick = function(){return files_sort(files_cmpbyfilename_desc);}
+		button.onclick = function(){return files_sort(files_cmpbyfilename_desc, "filename");}
 	else
-		button.setAttribute("onclick", "return files_sort(files_cmpbyfilename_desc);");
+		button.setAttribute("onclick", "return files_sort(files_cmpbyfilename_desc, 'filename');");
 	document.getElementById("filename").appendChild(button);
 	
 	button = document.createElement("span");
@@ -184,18 +184,33 @@ function files_prepare()
 
 function files_sort(sorter, id)
 {
+	// Set wait cursor
 	document.body.className = "wait";
 
 	function dosort()
 	{
+		// Sort rows
 		rows.sort(sorter);
-	
+
+		// Rearrange DOM according to sort result
 		var tbody = document.getElementById("files");
 		for (var i = 0; i < rows.length; ++i)
 			tbody.appendChild(rows[i]);
-	
+
+		// Highlight sort column
+		var ids = ["filename", "nroflines", "coverablelines", "coveredlines", "coverage"];
+		var css = document.styleSheets[1];
+		for (var i = 0; i < ids.length; ++i)
+		{
+			css.cssRules[i].style.backgroundColor = (ids[i] == id ? "#2f5a7e" : "#376a94");
+			css.cssRules[i+5].style.backgroundColor = (ids[i] == id ? "#f2f2f2" : "#fff");
+		}
+
+		// Remove wait cursor
 		document.body.className = "nowait";
 	}
+
+	// Start sort with timeout, so that new cursor can kick in
 	window.setTimeout(dosort, 0.01);
 	return false;
 }
@@ -204,22 +219,14 @@ function files_cmpbyfilename_asc(tr1, tr2)
 {
 	var fn1 = tr1.filename;
 	var fn2 = tr2.filename;
-	if (fn1>fn2)
-		return 1;
-	else if (fn1<fn2)
-		return -1;
-	return 0;
+	return (fn1>fn2?1:0)-(fn1<fn2?1:0);
 }
 
 function files_cmpbyfilename_desc(tr1, tr2)
 {
 	var fn1 = tr1.filename;
 	var fn2 = tr2.filename;
-	if (fn1<fn2)
-		return 1;
-	else if (fn1>fn2)
-		return -1;
-	return 0;
+	return (fn1<fn2?1:0)-(fn1>fn2?1:0);
 }
 
 function files_cmpbynroflines_asc(tr1, tr2)

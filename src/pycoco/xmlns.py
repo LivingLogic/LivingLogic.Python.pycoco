@@ -26,6 +26,7 @@ class page(xsc.Element):
 					meta.contenttype(),
 					html.title(self.attrs.title),
 					meta.stylesheet(href="root:coverage.css"),
+					meta.stylesheet(href="root:coverage_sortfilelist.css"),
 					htmlspecials.javascript(src="root:coverage.js"),
 				),
 				html.body(
@@ -150,7 +151,7 @@ class fileitem(xsc.Element):
 			),
 			html.td(
 				lines,
-				class_="noroflines",
+				class_="nroflines",
 			),
 			html.td(
 				coverablelines,

@@ -135,11 +135,6 @@ table.files tbody td.disable
 	color: #999;
 }
 
-table.files tbody td.sorted
-{
-	background-color: #eee;
-}
-
 table.file
 {
 	border-left: 1px solid #ddd;

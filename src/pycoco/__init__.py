@@ -197,16 +197,16 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			u = self.outputdir/(filename + ".html")
 			e.write(u.openwrite(), base="root:%s.html" % filename, encoding="utf-8")
 
-		# Copy CSS/JS file
-		for filename in ("coverage.css", "coverage.js"):
+		# Copy CSS/JS files
+		for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js"):
 			self.logProgress("### copying %s" % filename)
 			try:
 				import pkg_resources
 			except ImportError:
-				css = open(os.path.join(os.path.dirname(__file__), filename), "rb").read()
+				data = open(os.path.join(os.path.dirname(__file__), filename), "rb").read()
 			else:
-				css = pkg_resources.resource_string(__name__, filename)
-			(self.outputdir/filename).openwrite().write(css)
+				data = pkg_resources.resource_string(__name__, filename)
+			(self.outputdir/filename).openwrite().write(data)
 
 	def execute(self):
 		self.cleanup()
