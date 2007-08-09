@@ -4,10 +4,6 @@
 # Setup script for pycoco
 
 
-__version__ = "$Revision$"[11:-2]
-# $Source$
-
-
 try:
 	import setuptools as tools
 except ImportError:
