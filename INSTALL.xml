@@ -2,9 +2,9 @@
 <section><h>Requirements</h>
 <p>To use this module you need the following software packages:</p>
 <ol>
-<item><a href="http://www.python.org/">Python 2.4</a>;</item>
-<item><pyref module="ll.core">ll-core</pyref> (version 1.5 or later);</item>
-<item><pyref module="ll.xist">&xist;</pyref> (version 2.15.1 or later).</item>
+<li><a href="http://www.python.org/">Python 2.4</a>;</li>
+<li><pyref module="ll.core">ll-core</pyref> (version 1.5 or later);</li>
+<li><pyref module="ll.xist">&xist;</pyref> (version 2.15.1 or later).</li>
 </ol>
 </section>
 
