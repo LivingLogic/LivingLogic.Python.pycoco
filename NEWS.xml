@@ -1,20 +1,29 @@
-<section><title>Changes in 0.2 (released 10/19/2006)</title>
+<section><h>Changes in 0.3 (released 01/07/2008)</h>
 
-<par>The list of files can now be sorted by clicking on the appropriate buttons
-in the table headers.</par>
+<p>Changed docstring format.</p>
 
-</section>
-
-
-<section><title>Changes in 0.1.1 (released 10/02/2006)</title>
-
-<par>Added a missing import to the XIST namespace.</par>
+<p>UPdated to use &xist; 3.0.</p>
 
 </section>
 
 
-<section><title>Changes in 0.1 (released 10/02/2006)</title>
+<section><h>Changes in 0.2 (released 10/19/2006)</h>
 
-<par>Initial release.</par>
+<p>The list of files can now be sorted by clicking on the appropriate buttons
+in the table headers.</p>
+
+</section>
+
+
+<section><h>Changes in 0.1.1 (released 10/02/2006)</h>
+
+<p>Added a missing import to the XIST namespace.</p>
+
+</section>
+
+
+<section><h>Changes in 0.1 (released 10/02/2006)</h>
+
+<p>Initial release.</p>
 
 </section>

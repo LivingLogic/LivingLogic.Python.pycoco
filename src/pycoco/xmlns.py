@@ -11,7 +11,12 @@ from ll.xist import xsc
 from ll.xist.ns import xml, html, meta, htmlspecials
 
 
+xmlns = "http://xmlns.python.org/coverage"
+
+
 class page(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class title(xsc.TextAttr): required = True
 		class crumbs(xsc.TextAttr): required = True
@@ -56,6 +61,8 @@ class page(xsc.Element):
 
 
 class crumb(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class href(xsc.URLAttr): pass
 		class first(xsc.BoolAttr): pass
@@ -75,9 +82,12 @@ class crumb(xsc.Element):
 
 
 class filelist(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class timestamp(xsc.TextAttr): pass
 		class revision(xsc.TextAttr): pass
+
 	def convert(self, converter):
 		now = datetime.datetime.now()
 		e = xsc.Frag(
@@ -107,6 +117,8 @@ class filelist(xsc.Element):
 
 
 class fileitem(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class name(xsc.TextAttr): required = True
 		class lines(xsc.IntAttr): required = True
@@ -175,6 +187,8 @@ class fileitem(xsc.Element):
 
 
 class filecontent(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class name(xsc.TextAttr): required = True
 
@@ -199,6 +213,8 @@ class filecontent(xsc.Element):
 
 
 class fileline(xsc.Element):
+	xmlns = xmlns
+
 	class Attrs(xsc.Element.Attrs):
 		class lineno(xsc.IntAttr): required = True
 		class count(xsc.IntAttr): required = True
@@ -223,9 +239,3 @@ class fileline(xsc.Element):
 			class_=class_
 		)
 		return e.convert(converter)
-
-
-class __ns__(xsc.Namespace):
-	xmlname = "cov"
-	xmlurl = "http://xmlns.python.org/coverage"
-__ns__.makemod(vars())
