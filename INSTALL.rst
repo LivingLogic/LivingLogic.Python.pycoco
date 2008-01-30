@@ -4,12 +4,10 @@ Requirements
 To use this module you need the following software packages:
 
 	1.	`Python 2.5`_;
-	2.	`ll-core`_ (version 1.11 or later);
-	3.	`ll-xist`_ (version 3.0 or later);
+	2.	`ll-xist`_ (version 3.2 or later);
 
 	.. _Python 2.5: http://www.python.org/
-	.. _ll-core: http://www.livinglogic.de/Python/core
-	.. _ll-xist: http://www.livinglogic.de/Python/xist
+	.. _ll-xist: http://www.livinglogic.de/Python/Download.html#xist
 
 
 Installation
