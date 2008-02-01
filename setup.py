@@ -18,6 +18,11 @@ with code coverage options, runs the test suite and generates an HTML
 report how often each source code line in each C or Python file has been
 executed by the test suite.
 
+New in version 0.4
+------------------
+
+*	Docstrings are ReST now.
+
 New in version 0.3
 ------------------
 
@@ -55,7 +60,7 @@ coverage
 
 args = dict(
 	name="pycoco",
-	version="0.3",
+	version="0.4",
 	description="Python code coverage",
 	long_description=DESCRIPTION,
 	author=u"Walter Doerwald",
@@ -79,8 +84,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-core >= 1.5",
-		"ll-xist >= 2.15.1",
+		"ll-xist >= 3.2",
 	],
 	zip_safe=False,
 )

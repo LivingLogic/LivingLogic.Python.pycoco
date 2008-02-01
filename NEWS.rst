@@ -1,3 +1,9 @@
+Changes in 0.4 (released 02/01/2008)
+====================================
+
+*	Docstrings are ReST now.
+
+
 Changes in 0.3 (released 01/07/2008)
 ====================================
 
