@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 # Setup script for pycoco
 
+
+import re
 
 try:
 	import setuptools as tools
