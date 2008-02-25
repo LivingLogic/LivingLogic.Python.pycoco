@@ -3,7 +3,7 @@ Changes in 0.4 (released 02/25/2008)
 
 *	Removed XML version of the documentation.
 
-* Only the default set of tests gets run now.
+*	Only the default set of tests gets run now.
 
 
 Changes in 0.3 (released 01/07/2008)
