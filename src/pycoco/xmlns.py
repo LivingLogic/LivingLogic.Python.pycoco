@@ -23,7 +23,7 @@ class page(xsc.Element):
 
 	def convert(self, converter):
 		e = xsc.Frag(
-			xml.XML10(), "\n",
+			xml.XML(), "\n",
 			html.DocTypeXHTML10transitional(), "\n",
 			html.html(
 				html.head(
