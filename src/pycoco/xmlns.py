@@ -1,8 +1,7 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 """
-This module is an &xist; namespace used for formatting the &html; coverage
-report.
+This module is an XIST namespace used for formatting the HTML coverage report.
 """
 
 import datetime
