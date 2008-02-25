@@ -17,19 +17,6 @@ The script downloads the Python source code, builds the interpreter
 with code coverage options, runs the test suite and generates an HTML
 report how often each source code line in each C or Python file has been
 executed by the test suite.
-
-New in version 0.3
-------------------
-
-*	The format of the docstrings has been updated.
-
-*	Updated to use XIST 3.0.
-
-New in version 0.2
-------------------
-
-*	The list of files can now be sorted by clicking on the sort buttons
-	in the table headers.
 """
 
 
@@ -52,19 +39,36 @@ code coverage
 coverage
 """
 
+try:
+	news = list(open("NEWS.rst", "r"))
+except IOError:
+	description = DESCRIPTION.strip()
+else:
+	# Extract the first section (which are the changes for the current version)
+	underlines = [i for (i, line) in enumerate(news) if line.startswith("---")]
+	news = news[underlines[0]-1:underlines[1]-1]
+	news = "".join(news)
+	descr = "%s\n\n\n%s" % (DESCRIPTION.strip(), news)
+
+	# Get rid of text roles PyPI doesn't know about
+	descr = re.subn(":[a-z]+:`([a-zA-Z0-9_.]+)`", "``\\1``", descr)[0]
+
+	# Expand tabs (so they won't show up as 8 spacces in the Windows installer)
+	descr = descr.expandtabs(2)
+
 
 args = dict(
 	name="pycoco",
-	version="0.3",
+	version="0.4",
 	description="Python code coverage",
-	long_description=DESCRIPTION,
+	long_description=descr,
 	author=u"Walter Doerwald",
 	author_email="walter@livinglogic.de",
 	url="http://www.livinglogic.de/Python/pycoco/",
 	download_url="http://www.livinglogic.de/Python/Download.html#pycoco",
 	license="Python",
-	classifiers=[c for c in CLASSIFIERS.strip().splitlines() if c.strip() and not c.strip().startswith("#")],
-	keywords=", ".join(k for k in KEYWORDS.strip().splitlines() if k.strip() and not k.strip().startswith("#")),
+	classifiers=sorted(set(c for c in CLASSIFIERS.strip().splitlines() if c.strip() and not c.strip().startswith("#"))),
+	keywords=", ".join(sorted(set(k.strip() for k in KEYWORDS.strip().splitlines() if k.strip() and not k.strip().startswith("#")))),
 	package_dir={"": "src"},
 	packages=["pycoco"],
 	package_data={
