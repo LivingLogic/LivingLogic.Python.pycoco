@@ -5,6 +5,8 @@ Changes in 0.4 (released 02/25/2008)
 
 *	Only the default set of tests gets run now.
 
+*	Fixed a bug in page generation.
+
 
 Changes in 0.3 (released 01/07/2008)
 ------------------------------------
