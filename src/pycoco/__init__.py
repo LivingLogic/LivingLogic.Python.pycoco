@@ -84,7 +84,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def test(self):
 		self.logProgress("### running test")
-		lines = self.cmd("cd python && ./python Lib/test/regrtest.py -T -N -R :: -uurlfetch,largefile,network,decimal")
+		lines = self.cmd("cd python && ./python Lib/test/regrtest.py -T -N")
 		self.testlog.extend(lines)
 
 	def cleanup(self):
