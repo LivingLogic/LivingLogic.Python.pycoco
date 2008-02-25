@@ -85,8 +85,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-core >= 1.5",
-		"ll-xist >= 2.15.1",
+		"ll-xist >= 3.2",
 	],
 	zip_safe=False,
 )
