@@ -45,7 +45,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def cmd(self, cmd):
 		self.logProgress(">>> %s" % cmd)
-		pipe = os.popen(cmd + " 2>&1")
+		pipe = os.popen(cmd + " 2>&1", "rb", 1)
 		lines = []
 		for line in pipe:
 			self.logProgress("... " + line)
