@@ -5,9 +5,9 @@ Changes in 0.5 (released 03/18/2008)
 	(This requires gcc 4).
 
 *	Two logfiles are generated now: A log of the build process and a log of
-	running the tests. Both files are accessing from the generated start page.
+	running the tests. Both files are accessible from the generated start page.
 
-*	The following test are now run again: ``urlfetch``, ``largefile``,
+*	The following tests are now run again: ``urlfetch``, ``largefile``,
 	``network`` and ``decimal``
 
 
