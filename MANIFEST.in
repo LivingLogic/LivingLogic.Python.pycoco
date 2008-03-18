@@ -1,8 +1,6 @@
 include src/pycoco/coverage.js
 include src/pycoco/coverage.css
 include src/pycoco/coverage_sortfilelist.css
-include NEWS
-include NEWS.xml
-include INSTALL
-include INSTALL.xml
+include NEWS.rst
+include INSTALL.rst
 

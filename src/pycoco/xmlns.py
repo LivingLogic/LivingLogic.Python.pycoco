@@ -1,8 +1,7 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 """
-This module is an &xist; namespace used for formatting the &html; coverage
-report.
+This module is an XIST namespace used for formatting the HTML coverage report.
 """
 
 import datetime
@@ -24,7 +23,7 @@ class page(xsc.Element):
 
 	def convert(self, converter):
 		e = xsc.Frag(
-			xml.XML10(), "\n",
+			xml.XML(), "\n",
 			html.DocTypeXHTML10transitional(), "\n",
 			html.html(
 				html.head(
@@ -95,6 +94,7 @@ class filelist(xsc.Element):
 			html.p("Generated at ", now.strftime("%Y-%m-%d %H:%M:%S"), class_="note"),
 			html.p(self.attrs.timestamp, class_="note"),
 			html.p(self.attrs.revision, class_="note"),
+			html.p(html.a("Build log", href="buildlog.txt"), " ",html.a("Test log", href="testlog.txt"), class_="note"),
 			htmlspecials.plaintable(
 				html.thead(
 					html.tr(

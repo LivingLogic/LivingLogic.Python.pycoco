@@ -1,6 +1,9 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
-import sys, os, datetime, urllib, optparse
+
+from __future__ import with_statement
+
+import sys, os, datetime, urllib, optparse, contextlib
 
 from ll import sisyphus, url
 
@@ -24,8 +27,16 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		self.outputdir = url.Dir(outputdir)
 
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
-		self.compileopts = "-fprofile-arcs -ftest-coverage"
-		self.linkopts = "-lgcov"
+
+		# Options to add to the various variables in the Makefile
+		self.opts = {
+			"OPT": "-coverage",
+			"CCSHARED": "-coverage",
+			"LDSHARED": "-coverage",
+			"BLDSHARED": "-coverage",
+			"LINKFORSHARED": "-coverage",
+		}
+
 		self.gcovcmd = os.environ.get("COV", "gcov")
 		self.makefile = "python/Makefile"
 
@@ -67,12 +78,12 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		lines = self.cmd("cd python; %s" % self.configurecmd)
 		self.buildlog.extend(lines)
 		makelines = []
-		self.logProgress("### adding compiler options %s" % self.compileopts)
+		self.logProgress("### adding compiler options %s" % self.opts)
 		for line in open(self.makefile, "r"):
-			if line.startswith("OPT") and line[3:].strip().startswith("="):
-				line = line.rstrip("\n") + " " + self.compileopts + "\n"
-			if line.startswith("LIBC") and line[4:].strip().startswith("="):
-				line = line.rstrip("\n") + " " + self.linkopts + "\n"
+			for (opt, value) in self.opts.iteritems():
+				if line.startswith(opt) and line[len(opt):].strip().startswith("="):
+					line = line.rstrip("\n") + " " + value + "\n"
+					break
 			makelines.append(line)
 		file = open(self.makefile, "w")
 		file.writelines(makelines)
@@ -84,7 +95,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def test(self):
 		self.logProgress("### running test")
-		lines = self.cmd("cd python && ./python Lib/test/regrtest.py -T -N -R :: -uurlfetch,largefile,network,decimal")
+		lines = self.cmd("cd python && ./python Lib/test/regrtest.py -T -N -uurlfetch,largefile,network,decimal")
 		self.testlog.extend(lines)
 
 	def cleanup(self):
@@ -195,7 +206,8 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			)
 			e = e.conv()
 			u = self.outputdir/(filename + ".html")
-			e.write(u.openwrite(), base="root:%s.html" % filename, encoding="utf-8")
+			with contextlib.closing(u.openwrite()) as f:
+				e.write(f, base="root:%s.html" % filename, encoding="utf-8")
 
 		# Copy CSS/JS files
 		for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js"):
@@ -206,7 +218,16 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 				data = open(os.path.join(os.path.dirname(__file__), filename), "rb").read()
 			else:
 				data = pkg_resources.resource_string(__name__, filename)
-			(self.outputdir/filename).openwrite().write(data)
+			with contextlib.closing((self.outputdir/filename).openwrite()) as f:
+				f.write(data)
+
+		self.logProgress("### creating buildlog.txt")
+		with contextlib.closing((self.outputdir/"buildlog.txt").openwrite()) as f:
+			f.write("".join(self.buildlog))
+
+		self.logProgress("### creating testlog.txt")
+		with contextlib.closing((self.outputdir/"testlog.txt").openwrite()) as f:
+			f.write("".join(self.testlog))
 
 	def execute(self):
 		self.cleanup()
