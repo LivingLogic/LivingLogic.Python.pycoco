@@ -94,6 +94,7 @@ class filelist(xsc.Element):
 			html.p("Generated at ", now.strftime("%Y-%m-%d %H:%M:%S"), class_="note"),
 			html.p(self.attrs.timestamp, class_="note"),
 			html.p(self.attrs.revision, class_="note"),
+			html.p(html.a("Build log", href="buildlog.txt"), " ",html.a("Test log", href="testlog.txt"), class_="note"),
 			htmlspecials.plaintable(
 				html.thead(
 					html.tr(
