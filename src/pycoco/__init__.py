@@ -21,7 +21,7 @@ class File(object):
 
 class Python_GenerateCodeCoverage(sisyphus.Job):
 	def __init__(self, outputdir):
-		sisyphus.Job.__init__(self, 60*60, name="Python_GenerateCodeCoverage", raiseerrors=1)
+		sisyphus.Job.__init__(self, 2*60*60, name="Python_GenerateCodeCoverage", raiseerrors=1)
 		self.url = "http://svn.python.org/snapshots/python.tar.bz2"
 		self.tarfile = "python.tar.bz2"
 		self.outputdir = url.Dir(outputdir)
