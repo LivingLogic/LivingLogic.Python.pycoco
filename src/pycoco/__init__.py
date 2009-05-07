@@ -5,7 +5,7 @@ from __future__ import with_statement
 
 import sys, os, datetime, urllib, optparse, contextlib
 
-from ll import sisyphus, url
+from ll import sisyphus, url, ul4c
 
 from pycoco import xmlns
 
@@ -159,55 +159,48 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	def makehtml(self, files):
 		# Generate main page
 		self.logProgress("### generating index page")
-		e = xmlns.page(
-			xmlns.filelist(
-				(
-					xmlns.fileitem(
-						name=file.name.split("/", 1)[-1],
-						lines=len(file.lines),
-						coverablelines=sum(line[0]>=0 for line in file.lines),
-						coveredlines=sum(line[0]>0 for line in file.lines),
-					)
-					for file in files
-				),
-				timestamp=("Repository timestamp ", self.timestamp.strftime("%Y-%m-%d %H:%M:%S")),
-				revision=self.revision,
-			),
-			title=("Python code coverage (", self.timestamp.strftime("%Y-%m-%d"), ")"),
-			crumbs=(
-				xmlns.crumb("Core Development", href="http://www.python.org/dev/", first=True),
-				xmlns.crumb("Code coverage"),
-			),
-			onload="files_prepare()",
+		template = ul4c.compile(xmlns.page(xmlns.filelist(), onload="files_prepare()").conv().string())
+		s = template.renders(
+			filename=None,
+			now=datetime.datetime.now(),
+			timestamp=self.timestamp,
+			revision=self.revision,
+			crumbs=[
+				dict(title="Core Development", href="http://www.python.org/dev/"),
+				dict(title="Code coverage", href=None),
+			],
+			files=[
+				dict(
+					name=file.name.split("/", 1)[-1],
+					lines=len(file.lines),
+					coverablelines=sum(line[0]>=0 for line in file.lines),
+					coveredlines=sum(line[0]>0 for line in file.lines),
+				) for file in files
+			],
 		)
-		e = e.conv()
 		u = self.outputdir/"index.html"
-		e.write(u.openwrite(), base="root:index.html", encoding="utf-8")
+		with contextlib.closing(u.openwrite()) as f:
+			f.write(s.encode("utf-8"))
 
 		# Generate page for each source file
+		template = ul4c.compile(xmlns.page(xmlns.filecontent()).conv().string())
 		for (i, file) in enumerate(files):
 			filename = file.name.split("/", 1)[-1]
 			self.logProgress("### generating HTML %d/%d for %s" % (i+1, len(files), filename))
-			e = xmlns.page(
-				xmlns.filecontent(name=filename)(
-					xmlns.fileline(
-						content.decode("latin-1").expandtabs(8),
-						lineno=i+1,
-						count=count,
-					)
-					for (i, (count, content)) in enumerate(file.lines)
-				),
-				title=("Python code coverage: ", filename),
-				crumbs=(
-					xmlns.crumb("Core Development", href="http://www.python.org/dev/", first=True),
-					xmlns.crumb("Code coverage", href="root:index.html"),
-					xmlns.crumb(filename),
+			s = template.renders(
+				filename=filename,
+				crumbs=[
+					dict(title="Core Development", href="http://www.python.org/dev/"),
+					dict(title="Code coverage", href="/index.html"),
+					dict(title=filename, href=None),
+				],
+				lines=(
+					dict(count=count, content=content.decode("latin-1").expandtabs(8)) for (count, content) in file.lines
 				),
 			)
-			e = e.conv()
 			u = self.outputdir/(filename + ".html")
 			with contextlib.closing(u.openwrite()) as f:
-				e.write(f, base="root:%s.html" % filename, encoding="utf-8")
+				f.write(s.encode("utf-8"))
 
 		# Copy CSS/JS files
 		for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js"):
