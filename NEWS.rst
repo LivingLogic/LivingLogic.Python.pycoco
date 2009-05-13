@@ -1,3 +1,10 @@
+Changes in 0.6 (released 05/13/2009)
+------------------------------------
+
+*	Generating the HTML files is now done via UL4 templates (which takes 40
+	seconds instead of 30 minutes).
+
+
 Changes in 0.5 (released 03/18/2008)
 ------------------------------------
 
