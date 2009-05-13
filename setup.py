@@ -74,7 +74,7 @@ args = dict(
 	package_dir={"": "src"},
 	packages=["pycoco"],
 	package_data={
-		"": ["*.css", "*.js"],
+		"": ["*.css", "*.js", "*.gif"],
 	},
 	entry_points=dict(
 		console_scripts=[
@@ -85,7 +85,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-xist >= 3.2.3",
+		"ll-xist >= 3.6.4",
 	],
 	zip_safe=False,
 )
