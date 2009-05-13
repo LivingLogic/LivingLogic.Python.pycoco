@@ -202,8 +202,8 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			with contextlib.closing(u.openwrite()) as f:
 				f.write(s.encode("utf-8"))
 
-		# Copy CSS/JS files
-		for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js"):
+		# Copy CSS/JS/GIF files
+		for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js", "spc.gif"):
 			self.logProgress("### copying %s" % filename)
 			try:
 				import pkg_resources
