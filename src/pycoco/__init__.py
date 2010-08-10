@@ -28,15 +28,6 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
 
-		# Options to add to the various variables in the Makefile
-		self.opts = {
-			"OPT": "-coverage",
-			"CCSHARED": "-coverage",
-			"LDSHARED": "-coverage",
-			"BLDSHARED": "-coverage",
-			"LINKFORSHARED": "-coverage",
-		}
-
 		self.gcovcmd = os.environ.get("COV", "gcov")
 		self.makefile = "python/Makefile"
 
@@ -77,21 +68,10 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		self.logProgress("### configuring")
 		lines = self.cmd("cd python; %s" % self.configurecmd)
 		self.buildlog.extend(lines)
-		makelines = []
-		self.logProgress("### adding compiler options %s" % self.opts)
-		for line in open(self.makefile, "r"):
-			for (opt, value) in self.opts.iteritems():
-				if line.startswith(opt) and line[len(opt):].strip().startswith("="):
-					line = line.rstrip("\n") + " " + value + "\n"
-					break
-			makelines.append(line)
-		file = open(self.makefile, "w")
-		file.writelines(makelines)
-		file.close()
 
 	def make(self):
 		self.logProgress("### running make")
-		self.buildlog.extend(self.cmd("cd python && make"))
+		self.buildlog.extend(self.cmd("cd python && make coverage"))
 
 	def test(self):
 		self.logProgress("### running test")
