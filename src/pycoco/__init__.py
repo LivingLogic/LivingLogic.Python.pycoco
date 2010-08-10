@@ -20,10 +20,10 @@ class File(object):
 
 
 class Python_GenerateCodeCoverage(sisyphus.Job):
-	def __init__(self, outputdir):
+	def __init__(self, u, outputdir):
 		sisyphus.Job.__init__(self, 2*60*60, name="Python_GenerateCodeCoverage", raiseerrors=1)
-		self.url = "http://svn.python.org/snapshots/python.tar.bz2"
-		self.tarfile = "python.tar.bz2"
+		self.url = url.URL(u)
+		self.tarfile = self.url.file
 		self.outputdir = url.Dir(outputdir)
 
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
@@ -221,12 +221,14 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 def main(args=None):
 	p = optparse.OptionParser(usage="usage: %prog [options]")
+	p.add_option("-u", "--url", dest="url", help="URL of the Python tarball", default="http://svn.python.org/snapshots/python3k.tar.bz2")
 	p.add_option("-o", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default="~/pycoco")
 	(options, args) = p.parse_args(args)
 	if len(args) != 0:
 		p.error("incorrect number of arguments")
 		return 1
-	sisyphus.execute(Python_GenerateCodeCoverage(options.outputdir))
+
+	sisyphus.execute(Python_GenerateCodeCoverage(options.url, options.outputdir))
 	return 0
 
 

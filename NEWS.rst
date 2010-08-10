@@ -1,3 +1,11 @@
+Changes in 0.7 (released 08/10/2010)
+------------------------------------
+
+*	The URL of the Python tarball can now be specified on the command line.
+
+*	Genrating coverage info is now done via calling ``make coverage``.
+
+
 Changes in 0.6 (released 05/13/2009)
 ------------------------------------
 
