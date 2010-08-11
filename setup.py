@@ -61,7 +61,7 @@ else:
 
 args = dict(
 	name="pycoco",
-	version="0.7",
+	version="0.7.1",
 	description="Python code coverage",
 	long_description=descr,
 	author=u"Walter Doerwald",

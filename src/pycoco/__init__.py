@@ -55,7 +55,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def download(self):
 		self.logProgress("### downloading %s to %s" % (self.url, self.tarfile))
-		urllib.urlretrieve(self.url, self.tarfile)
+		urllib.urlretrieve(str(self.url), self.tarfile)
 
 	def unpack(self):
 		self.logProgress("### unpacking %s" % self.tarfile)

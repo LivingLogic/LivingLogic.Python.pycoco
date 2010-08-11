@@ -1,3 +1,9 @@
+Changes in 0.7.1 (released 08/11/2010)
+--------------------------------------
+
+*	Fixed a bug in the :meth:`download` method.
+
+
 Changes in 0.7 (released 08/10/2010)
 ------------------------------------
 
