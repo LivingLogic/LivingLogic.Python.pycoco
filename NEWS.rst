@@ -1,3 +1,9 @@
+Changes in 0.7.2 (released 09/08/2010)
+--------------------------------------
+
+*	Added the missing pixel GIF ``spc.gif``.
+
+
 Changes in 0.7.1 (released 08/11/2010)
 --------------------------------------
 

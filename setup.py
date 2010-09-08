@@ -61,7 +61,7 @@ else:
 
 args = dict(
 	name="pycoco",
-	version="0.7.1",
+	version="0.7.2",
 	description="Python code coverage",
 	long_description=descr,
 	author=u"Walter Doerwald",
@@ -74,7 +74,7 @@ args = dict(
 	package_dir={"": "src"},
 	packages=["pycoco"],
 	package_data={
-		"": ["*.css", "*.js", "*.gif"],
+		"": ["*.gif", "*.css", "*.js"],
 	},
 	entry_points=dict(
 		console_scripts=[
@@ -85,7 +85,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-xist >= 3.6.4",
+		"ll-xist >= 3.9",
 	],
 	zip_safe=False,
 )
