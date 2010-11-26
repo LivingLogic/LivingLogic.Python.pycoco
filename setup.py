@@ -61,7 +61,7 @@ else:
 
 args = dict(
 	name="pycoco",
-	version="0.7.2",
+	version="0.8",
 	description="Python code coverage",
 	long_description=descr,
 	author=u"Walter Doerwald",
@@ -85,7 +85,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-xist >= 3.9",
+		"ll-xist >= 3.15",
 	],
 	zip_safe=False,
 )
