@@ -87,8 +87,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	def test(self):
 		with self.prefix("test: "):
 			self.log("### running test")
-			lines = self.cmd("cd python && ./python.exe Lib/test/regrtest.py --coverage --nocoverdir test_urllib")
-			# lines = self.cmd("cd python && ./python Lib/test/regrtest.py --coverage --nocoverdir -uurlfetch,largefile,network,decimal")
+			lines = self.cmd("cd python && ./python -mtest.regrtest -T -N -uurlfetch,largefile,network,decimal")
 			self.testlog.extend(lines)
 
 	def cleanup(self):
