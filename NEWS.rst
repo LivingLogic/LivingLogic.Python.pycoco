@@ -1,3 +1,11 @@
+Changes in 0.8 (released ??/??/2011)
+------------------------------------
+
+*	The Python source code is checked out via ``hg`` now.
+
+*	Updated to use XIST 3.23.
+
+
 Changes in 0.7.2 (released 09/08/2010)
 --------------------------------------
 

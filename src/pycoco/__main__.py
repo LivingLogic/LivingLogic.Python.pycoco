@@ -26,10 +26,10 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	argdescription = "Generate code coverage info for the Python source code"
 	projectname = "Python"
 	jobname = "GenerateCodeCoverage"
-	maxtime = 6* 60 * 60 # 6 hours
+	maxtime = 8 * 60 * 60 # 8 hours
 
 	def __init__(self):
-		self.url = url.URL("http://svn.python.org/snapshots/python3k.tar.bz2")
+		self.url = url.URL("http://hg.python.org/cpython")
 		self.outputdir = url.Dir("~/pycoco")
 
 		self.configurecmd = "./configure --enable-unicode=ucs4 --with-pydebug"
@@ -62,16 +62,18 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def download(self):
 		with self.prefix("download: "):
-			self.log("### downloading %s to %s" % (self.url, self.url.file))
-			urllib.urlretrieve(str(self.url), str(self.url.file))
+			self.log("### cloning %s to python" % self.url)
+			self.cmd("hg clone %s python" % str(self.url))
 
-	def unpack(self):
-		with self.prefix("unpack: "):
-			self.log("### unpacking %s" % self.url.file)
-			self.cmd("tar xvjf %s" % self.url.file)
-			lines = list(open("python/.timestamp", "r"))
-			self.timestamp = datetime.datetime.fromtimestamp(int(lines[0]))
-			self.revision = lines[2]
+	def getinfo(self):
+		with self.prefix("getinfo: "):
+			self.log("### getting info")
+			lines = self.cmd("cd python && hg tip --template='{date|hgdate} {node} {rev} {author|person}'")
+			data = lines[0].split()
+			self.timestamp = datetime.datetime.fromtimestamp(int(data[0]))
+			self.changesetid = data[2]
+			self.revision = int(data[3])
+			self.author = " ".join(data[4:])
 
 	def configure(self):
 		with self.prefix("configure: "):
@@ -94,7 +96,6 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		with self.prefix("cleanup: "):
 			self.log("### cleaning up files from previous run")
 			self.cmd("rm -rf python")
-			self.cmd("rm %s" % self.url.file)
 
 	def coveruncovered(self, file):
 		with self.prefix("cover: "):
@@ -153,12 +154,14 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		with self.prefix("html: "):
 			# Generate main page
 			self.log("### generating index page")
-			template = ul4c.compile(xmlns.page(xmlns.filelist(), onload="files_prepare()").conv().string())
+			template = ul4c.Template(xmlns.page(xmlns.filelist(), onload="files_prepare()").conv().string())
 			s = template.renders(
 				filename=None,
 				now=datetime.datetime.now(),
 				timestamp=self.timestamp,
+				changesetid=self.changesetid,
 				revision=self.revision,
+				author=self.author,
 				crumbs=[
 					dict(title="Core Development", href="http://www.python.org/dev/"),
 					dict(title="Code coverage", href=None),
@@ -177,7 +180,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 				f.write(s.encode("utf-8"))
 
 			# Generate page for each source file
-			template = ul4c.compile(xmlns.page(xmlns.filecontent()).conv().string())
+			template = ul4c.Template(xmlns.page(xmlns.filecontent()).conv().string())
 			for (i, file) in enumerate(files):
 				filename = file.name.split("/", 1)[-1]
 				self.log("### generating HTML %d/%d for %s" % (i+1, len(files), filename))
@@ -219,7 +222,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	def execute(self):
 		self.cleanup()
 		self.download()
-		self.unpack()
+		self.getinfo()
 		self.configure()
 		files = self.files("python")
 		self.make()
@@ -234,7 +237,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 
 	def argparser(self):
 		p = sisyphus.Job.argparser(self)
-		p.add_argument("-u", "--url", dest="url", help="URL of the Python tarball", default=str(self.url), type=url.URL)
+		p.add_argument("-u", "--url", dest="url", help="URL of the Python mercurial repository", default=str(self.url), type=url.URL)
 		p.add_argument("-d", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default=str(self.outputdir), type=url.Dir)
 		return p
 

@@ -33,7 +33,7 @@ class page(xsc.Element):
 						ul4.if_("filename"),
 							": ", ul4.printx("filename"),
 						ul4.else_(),
-							" (", ul4.print_("timestamp.format('%Y-%m-%d')"), ")",
+							" (", ul4.print_("format(timestamp, '%Y-%m-%d')"), ")",
 						ul4.end("if"),
 					),
 					meta.stylesheet(href="/coverage.css"),
@@ -91,12 +91,12 @@ class filelist(xsc.Element):
 		class revision(xsc.TextAttr): pass
 
 	def convert(self, converter):
-		now = datetime.datetime.now()
 		e = xsc.Frag(
 			html.h1("Python code coverage"),
 			html.p("Generated at ", ul4.printx("now.format('%Y-%m-%d %H:%M:%S')"), class_="note"),
-			html.p("Repository timestamp ", ul4.printx("timestamp.format('%Y-%m-%d %H:%M:%S')"), class_="note"),
-			html.p(ul4.printx("revision"), class_="note"),
+			html.p("Last commit at ", ul4.printx("timestamp.format('%Y-%m-%d %H:%M:%S')"), " by ", ul4.printx("author"), class_="note"),
+			html.p("Changeset identification hash ", ul4.printx("changesetid"), class_="note"),
+			html.p("Local revision number ", ul4.printx("revision"), class_="note"),
 			html.p(html.a("Build log", href="buildlog.txt"), " ",html.a("Test log", href="testlog.txt"), class_="note"),
 			htmlspecials.plaintable(
 				html.thead(
@@ -173,76 +173,6 @@ class filelist(xsc.Element):
 				),
 				class_="files",
 			)
-		)
-		return e.convert(converter)
-
-
-class fileitem(xsc.Element):
-	xmlns = xmlns
-
-	class Attrs(xsc.Element.Attrs):
-		class name(xsc.TextAttr): required = True
-		class lines(xsc.IntAttr): required = True
-		class coverablelines(xsc.IntAttr): required = True
-		class coveredlines(xsc.IntAttr): required = True
-
-	def convert(self, converter):
-		lines = int(self.attrs.lines)
-		coverablelines = int(self.attrs.coverablelines)
-		coveredlines = int(self.attrs.coveredlines)
-
-		distsize = (100, 8)
-		if coverablelines:
-			coverage = "%.02f%%" % (100.*coveredlines/coverablelines)
-			coverageclass = "coverage"
-			distribution = xsc.Frag()
-			totalwidth = 0
-			if coverablelines < lines:
-				width = int(float(lines-coverablelines)/lines*distsize[0])
-				distribution.append(htmlspecials.pixel(width=width, height=distsize[1], style="background-color: #ccc;"))
-				totalwidth += width
-			if coveredlines < coverablelines:
-				width = int(float(coverablelines-coveredlines)/lines*distsize[0])
-				distribution.append(htmlspecials.pixel(width=width, height=distsize[1], style="background-color: #f00;"))
-				totalwidth += width
-			if totalwidth < distsize[0]:
-				width = distsize[0]-totalwidth
-				distribution.append(htmlspecials.pixel(width=width, height=distsize[1], style="background-color: #0c0;"))
-				totalwidth += width
-		else:
-			coverage = "n/a"
-			coverageclass = "coverage disable"
-			distribution = htmlspecials.pixel(width=distsize[0], height=distsize[1], style="background-color: #000;")
-
-		e = html.tr(
-			html.th(
-				html.a(
-					self.attrs.name,
-					href=("root:", self.attrs.name, ".html"),
-				),
-				class_="filename",
-			),
-			html.td(
-				lines,
-				class_="nroflines",
-			),
-			html.td(
-				coverablelines,
-				class_="coverablelines",
-			),
-			html.td(
-				coveredlines,
-				class_="coveredlines",
-			),
-			html.td(
-				coverage,
-				class_=coverageclass,
-			),
-			html.td(
-				distribution,
-				class_="dist",
-			),
-			class_="files",
 		)
 		return e.convert(converter)
 

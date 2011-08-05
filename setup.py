@@ -35,7 +35,8 @@ Topic :: Software Development :: Testing
 KEYWORDS = """
 Python
 source code
-subversion
+hg
+mercurial
 test
 code coverage
 coverage
@@ -85,7 +86,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-xist >= 3.15",
+		"ll-xist >= 3.23",
 	],
 	zip_safe=False,
 )
