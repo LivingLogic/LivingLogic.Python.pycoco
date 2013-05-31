@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import with_statement
-
-import sys, os, re, datetime, urllib, optparse, contextlib, subprocess, codecs
+import sys, os, re, datetime, urllib.request, urllib.parse, urllib.error, optparse, contextlib, subprocess, codecs
 
 from ll import sisyphus, url, ul4c
 
@@ -45,6 +43,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		pipe = subprocess.Popen(cmd, shell=True, bufsize=0, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout
 		lines = []
 		for line in pipe:
+			line = line.decode("utf-8", "backslashescape")
 			self.log("... " + line)
 			lines.append(line)
 		return lines
@@ -100,7 +99,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	def coveruncovered(self, file):
 		with self.prefix("cover: "):
 			self.log("### faking coverage info for uncovered file %r" % file.name)
-			with open(file.name, "r") as f:
+			with open(file.name, "r", encoding="iso-8859-1") as f:
 				file.lines = [(None, line.rstrip("\n")) for line in f]
 
 	def coverpy(self, file):
@@ -108,7 +107,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			coverfilename = os.path.splitext(file.name)[0] + ".cover"
 			self.log("### fetching coverage info for Python file %r from %r" % (file.name, coverfilename))
 			try:
-				with open(coverfilename, "r") as f:
+				with open(coverfilename, "r", encoding="iso-8859-1") as f:
 					for line in f:
 						line = line.rstrip("\n")
 						prefix, line = line[:7], line[7:]
@@ -119,7 +118,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 							file.lines.append((0, line))
 						else:
 							file.lines.append((int(prefix.rstrip(":")), line))
-			except IOError, exc:
+			except IOError as exc:
 				self.log.exc(exc)
 				self.coveruncovered(file)
 
@@ -130,7 +129,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 			basename = os.path.basename(file.name)
 			self.cmd("cd python && %s %s -o %s" % (self.gcovcmd, basename, dirname))
 			try:
-				with open("python/%s.gcov" % basename, "r") as f:
+				with open("python/%s.gcov" % basename, "r", encoding="iso-8859-1") as f:
 					for line in f:
 						line = line.rstrip("\n")
 						if line.count(":") < 2:
@@ -146,7 +145,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 							file.lines.append((0, line))
 						else:
 							file.lines.append((int(count), line))
-			except IOError, exc:
+			except IOError as exc:
 				self.log.exc(exc)
 				self.coveruncovered(file)
 
@@ -154,9 +153,10 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 		with self.prefix("html: "):
 			# Generate main page
 			self.log("### generating index page")
-			template = ul4c.Template(xmlns.page(xmlns.filelist(), onload="files_prepare()").conv().string())
+			template = ul4c.Template(xmlns.page(xmlns.filelist()).conv().string(), "filelist")
 			s = template.renders(
 				filename=None,
+				onload="files_prepare()",
 				now=datetime.datetime.now(),
 				timestamp=self.timestamp,
 				changesetid=self.changesetid,
@@ -170,17 +170,17 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 					dict(
 						name=file.name.split("/", 1)[-1],
 						lines=len(file.lines),
-						coverablelines=sum(line[0]>=0 for line in file.lines),
-						coveredlines=sum(line[0]>0 for line in file.lines),
+						coverablelines=sum(line[0] is not None and line[0]>=0 for line in file.lines),
+						coveredlines=sum(line[0] is not None and line[0]>0 for line in file.lines),
 					) for file in files
 				],
 			)
 			u = self.outputdir/"index.html"
-			with contextlib.closing(u.openwrite()) as f:
-				f.write(s.encode("utf-8"))
+			with contextlib.closing(u.open("w", encoding="utf-8")) as f:
+				f.write(s)
 
 			# Generate page for each source file
-			template = ul4c.Template(xmlns.page(xmlns.filecontent()).conv().string())
+			template = ul4c.Template(xmlns.page(xmlns.filecontent()).conv().string(), "file")
 			for (i, file) in enumerate(files):
 				filename = file.name.split("/", 1)[-1]
 				self.log("### generating HTML %d/%d for %s" % (i+1, len(files), filename))
@@ -192,12 +192,12 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 						dict(title=filename, href=None),
 					],
 					lines=(
-						dict(count=count, content=content.decode("latin-1").expandtabs(8)) for (count, content) in file.lines
+						dict(count=count, content=content.expandtabs(8)) for (count, content) in file.lines
 					),
 				)
 				u = self.outputdir/(filename + ".html")
-				with contextlib.closing(u.openwrite()) as f:
-					f.write(s.encode("utf-8"))
+				with contextlib.closing(u.open("w", encoding="utf-8")) as f:
+					f.write(s)
 
 			# Copy CSS/JS/GIF files
 			for filename in ("coverage.css", "coverage_sortfilelist.css", "coverage.js", "spc.gif"):
@@ -208,15 +208,15 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 					data = open(os.path.join(os.path.dirname(__file__), filename), "rb").read()
 				else:
 					data = pkg_resources.resource_string(__name__, filename)
-				with contextlib.closing((self.outputdir/filename).openwrite()) as f:
+				with contextlib.closing((self.outputdir/filename).open("wb")) as f:
 					f.write(data)
 
 			self.log("### creating buildlog.txt")
-			with contextlib.closing((self.outputdir/"buildlog.txt").openwrite()) as f:
+			with contextlib.closing((self.outputdir/"buildlog.txt").open("w", encoding="utf-8")) as f:
 				f.write("".join(self.buildlog))
 
 			self.log("### creating testlog.txt")
-			with contextlib.closing((self.outputdir/"testlog.txt").openwrite()) as f:
+			with contextlib.closing((self.outputdir/"testlog.txt").open("w", encoding="utf-8")) as f:
 				f.write("".join(self.testlog))
 
 	def execute(self):
@@ -238,7 +238,7 @@ class Python_GenerateCodeCoverage(sisyphus.Job):
 	def argparser(self):
 		p = sisyphus.Job.argparser(self)
 		p.add_argument("-u", "--url", dest="url", help="URL of the Python mercurial repository", default=str(self.url), type=url.URL)
-		p.add_argument("-d", "--outputdir", dest="outputdir", help="Directory where to put the HTML files", default=str(self.outputdir), type=url.Dir)
+		p.add_argument("-d", "--outputdir", dest="outputdir", help="Directory where to put the HTML files (must end in '/')", default=str(self.outputdir), type=url.URL)
 		return p
 
 	def parseargs(self, args=None):

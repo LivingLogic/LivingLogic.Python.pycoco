@@ -16,11 +16,6 @@ xmlns = "http://xmlns.python.org/coverage"
 class page(xsc.Element):
 	xmlns = xmlns
 
-	class Attrs(xsc.Element.Attrs):
-		class title(xsc.TextAttr): required = True
-		class crumbs(xsc.TextAttr): required = True
-		class onload(xsc.TextAttr): pass
-
 	def convert(self, converter):
 		e = xsc.Frag(
 			xml.XML(), "\n",
@@ -56,7 +51,7 @@ class page(xsc.Element):
 										ul4.if_("i"),
 											">",
 										ul4.else_(),
-											u"\xbb",
+											"\xbb",
 										ul4.end("if"),
 										class_="bullet",
 									),
@@ -76,7 +71,7 @@ class page(xsc.Element):
 						self.content,
 						class_="content",
 					),
-					onload=ul4.attr_if("get('onload')", ul4.printx("onload")),
+					onload=ul4.attr_if(ul4.printx("onload"), cond="onload"),
 				),
 			),
 		)
@@ -86,15 +81,11 @@ class page(xsc.Element):
 class filelist(xsc.Element):
 	xmlns = xmlns
 
-	class Attrs(xsc.Element.Attrs):
-		class timestamp(xsc.TextAttr): pass
-		class revision(xsc.TextAttr): pass
-
 	def convert(self, converter):
 		e = xsc.Frag(
 			html.h1("Python code coverage"),
-			html.p("Generated at ", ul4.printx("now.format('%Y-%m-%d %H:%M:%S')"), class_="note"),
-			html.p("Last commit at ", ul4.printx("timestamp.format('%Y-%m-%d %H:%M:%S')"), " by ", ul4.printx("author"), class_="note"),
+			html.p("Generated at ", ul4.printx("format(now, '%Y-%m-%d %H:%M:%S')"), class_="note"),
+			html.p("Last commit at ", ul4.printx("format(timestamp, '%Y-%m-%d %H:%M:%S')"), " by ", ul4.printx("author"), class_="note"),
 			html.p("Changeset identification hash ", ul4.printx("changesetid"), class_="note"),
 			html.p("Local revision number ", ul4.printx("revision"), class_="note"),
 			html.p(html.a("Build log", href="buildlog.txt"), " ",html.a("Test log", href="testlog.txt"), class_="note"),
@@ -133,7 +124,7 @@ class filelist(xsc.Element):
 							),
 							html.td(
 								ul4.if_("file.coverablelines"),
-									ul4.printx("((100.*file.coveredlines)/file.coverablelines).format('.2f')"),
+									ul4.printx("format((100.*file.coveredlines)/file.coverablelines, '.2f')"),
 									"%",
 								ul4.else_(),
 									"n/a",
@@ -180,9 +171,6 @@ class filelist(xsc.Element):
 class filecontent(xsc.Element):
 	xmlns = xmlns
 
-	class Attrs(xsc.Element.Attrs):
-		class name(xsc.TextAttr): required = True
-
 	def convert(self, converter):
 		e = xsc.Frag(
 			html.h1("Python code coverage for ", ul4.printx("filename")),
@@ -207,13 +195,13 @@ class filecontent(xsc.Element):
 								class_="count",
 							),
 							html.td(ul4.printx("line.content"), class_="line"),
-							class_=(
-								ul4.attr_if("isnone(line.count) or line.count <= 0"),
+							class_=ul4.attr_if(
 								ul4.if_("isnone(line.count) or line.count < 0"),
 									"uncoverable",
 								ul4.elif_("not line.count"),
 									"uncovered",
 								ul4.end("if"),
+								cond="isnone(line.count) or line.count <= 0",
 							),
 						),
 					ul4.end("for"),

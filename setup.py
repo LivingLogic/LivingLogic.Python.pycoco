@@ -65,7 +65,7 @@ args = dict(
 	version="0.8",
 	description="Python code coverage",
 	long_description=descr,
-	author=u"Walter Doerwald",
+	author="Walter Doerwald",
 	author_email="walter@livinglogic.de",
 	url="http://www.livinglogic.de/Python/pycoco/",
 	download_url="http://www.livinglogic.de/Python/Download.html#pycoco",
@@ -86,7 +86,7 @@ args = dict(
 		"scripts/pycoco",
 	],
 	install_requires=[
-		"ll-xist >= 3.23",
+		"ll-xist == 4.10",
 	],
 	zip_safe=False,
 )
